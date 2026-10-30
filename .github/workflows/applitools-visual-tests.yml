@@ -37,6 +37,15 @@ jobs:
           --logger "trx;LogFileName=visual-test-results.trx"
           --results-directory ./TestResults
 
+      - name: Send test results to Grafana
+        if: always()
+        uses: gillersja1/test-results-otel@v1
+        with:
+          results: TestResults/*.trx
+          suite: visual
+          otlp-endpoint: ${{ secrets.OTEL_EXPORTER_OTLP_ENDPOINT }}
+          otlp-headers: ${{ secrets.OTEL_EXPORTER_OTLP_HEADERS }}
+
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
